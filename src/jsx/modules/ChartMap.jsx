@@ -21,14 +21,7 @@ import getColorAxis from '../helpers/GetColorAxis.js';
 // import { v4 as uuidv4 } from 'uuid';
 
 const ChartMap = forwardRef((props, ref) => {
-  // const hasInitialized = useRef(false);
-  // console.log(props);
-
   const createMap = useCallback((data, type, topology) => {
-    // if (hasInitialized.current) {
-    //   return () => {}; // Always return a function
-    // }
-    // hasInitialized.current = true;
     const plainborders = processTopoObject(topology, 'plain-borders');
     const dashedborders = processTopoObject(topology, 'dashed-borders');
     const dottedborders = processTopoObject(topology, 'dotted-borders');
@@ -62,9 +55,9 @@ const ChartMap = forwardRef((props, ref) => {
       if (data_type === 'mining') {
         return 'All: {point.value:.1f}%<br />Agriculture: {point.agriculture:.1f}%<br />Energy: {point.energy:.1f}%<br /><strong>Mining: {point.mining:.1f}%</strong>';
       }
-
       return 'All: {point.value:.1f}%<br />Agriculture: {point.agriculture:.1f}%<br />Energy: {point.energy:.1f}%<br />Mining: {point.mining:.1f}%';
     };
+
     Highcharts.setOptions({
       lang: {
         decimalPoint: '.',
@@ -72,7 +65,6 @@ const ChartMap = forwardRef((props, ref) => {
         thousandsSep: ' '
       }
     });
-
     ref.current = Highcharts.mapChart('map_container', {
       caption: {
         align: 'left',
@@ -87,8 +79,8 @@ const ChartMap = forwardRef((props, ref) => {
         x: 0
       },
       chart: {
-        height: Math.max((document.getElementById('map_container').offsetWidth * 9) / 16, 400),
         backgroundColor: '#f4f9fd',
+        height: Math.max((document.getElementById('map_container').offsetWidth * 9) / 16, 400),
         type: 'map'
       },
       colorAxis: getColorAxis(type),
@@ -132,8 +124,12 @@ const ChartMap = forwardRef((props, ref) => {
             events: {
               mouseOver() {
                 const element = this;
+                if (element.id === 'C00003') {
+                  return false;
+                }
                 if (element.id === '156') {
                   const { chart } = element.series;
+                  chart.get('156').setState('hover');
                   chart.get('158').setState('hover');
                   chart.get('344').setState('hover');
                   chart.get('446').setState('hover');
@@ -156,10 +152,12 @@ const ChartMap = forwardRef((props, ref) => {
                   chart.get('158').setState('hover');
                   chart.get('344').setState('hover');
                 }
+                return true;
               },
               mouseOut() {
                 const element = this;
                 const { chart } = element.series;
+                chart.get('156').setState('');
                 chart.get('158').setState('');
                 chart.get('344').setState('');
                 chart.get('446').setState('');
@@ -226,6 +224,7 @@ const ChartMap = forwardRef((props, ref) => {
           data: economies.map(region => ({
             borderWidth: 0,
             geometry: region.geometry
+
           })),
           enableMouseTracking: false,
           name: 'Economies',

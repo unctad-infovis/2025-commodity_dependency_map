@@ -28,6 +28,7 @@ function getColorFromValue(value, type, dependency) {
 // Define a color mapping function based on value **and code**
 const getColor = (value, code, data, type, dependency) => {
   const AksaiChin = 'C00002'; // code for disputed area Aksai Chin
+  const ArunachalPradesh = 'C00003'; // code for disputed area Aksai Chin
   const Kosovo = '412';
   const Taiwan = '158';
   const HongKong = '344';
@@ -51,6 +52,12 @@ const getColor = (value, code, data, type, dependency) => {
         width: 10 // Width of the pattern
       }
     };
+  }
+  // First check if this code is special
+  if (code === ArunachalPradesh) {
+    const indiaData = data.find(item => item.code === '356'); // Find china in data
+    const indiaValue = indiaData ? indiaData[type] : null; // Get china's value, default to null
+    return getColorFromValue(indiaValue, type, dependency);
   }
   // First check if this code is special
   if (code === Kosovo) {
