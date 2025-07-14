@@ -44,18 +44,18 @@ const ChartMap = forwardRef((props, ref) => {
 
     const pointFormat = (data_type) => {
       if (data_type === 'all') {
-        return '<strong>All: {point.value:.1f}%</strong><br />Agriculture: {point.agriculture:.1f}%<br />Energy: {point.energy:.1f}%<br />Mining: {point.mining:.1f}%';
+        return '<strong>All: {point.all:.1f}%</strong><br />Agriculture: {point.agriculture:.1f}%<br />Energy: {point.energy:.1f}%<br />Mining: {point.mining:.1f}%';
       }
       if (data_type === 'agriculture') {
-        return 'All: {point.value:.1f}%<br /><strong>Agriculture: {point.agriculture:.1f}%</strong><br />Energy: {point.energy:.1f}%<br />Mining: {point.mining:.1f}%';
+        return 'All: {point.all:.1f}%<br /><strong>Agriculture: {point.agriculture:.1f}%</strong><br />Energy: {point.energy:.1f}%<br />Mining: {point.mining:.1f}%';
       }
       if (data_type === 'energy') {
-        return 'All: {point.value:.1f}%<br />Agriculture: {point.agriculture:.1f}%<br /><strong>Energy: {point.energy:.1f}%</strong><br />Mining: {point.mining:.1f}%';
+        return 'All: {point.all:.1f}%<br />Agriculture: {point.agriculture:.1f}%<br /><strong>Energy: {point.energy:.1f}%</strong><br />Mining: {point.mining:.1f}%';
       }
       if (data_type === 'mining') {
-        return 'All: {point.value:.1f}%<br />Agriculture: {point.agriculture:.1f}%<br />Energy: {point.energy:.1f}%<br /><strong>Mining: {point.mining:.1f}%</strong>';
+        return 'All: {point.all:.1f}%<br />Agriculture: {point.agriculture:.1f}%<br />Energy: {point.energy:.1f}%<br /><strong>Mining: {point.mining:.1f}%</strong>';
       }
-      return 'All: {point.value:.1f}%<br />Agriculture: {point.agriculture:.1f}%<br />Energy: {point.energy:.1f}%<br />Mining: {point.mining:.1f}%';
+      return 'All: {point.all:.1f}%<br />Agriculture: {point.agriculture:.1f}%<br />Energy: {point.energy:.1f}%<br />Mining: {point.mining:.1f}%';
     };
 
     Highcharts.setOptions({
@@ -65,6 +65,23 @@ const ChartMap = forwardRef((props, ref) => {
         thousandsSep: ' '
       }
     });
+    Highcharts.SVGRenderer.prototype.symbols.download = (x, y, w, h) => {
+      const path = [
+        // Arrow stem
+        'M', x + w * 0.5, y,
+        'L', x + w * 0.5, y + h * 0.7,
+        // Arrow head
+        'M', x + w * 0.3, y + h * 0.5,
+        'L', x + w * 0.5, y + h * 0.7,
+        'L', x + w * 0.7, y + h * 0.5,
+        // Box
+        'M', x, y + h * 0.9,
+        'L', x, y + h,
+        'L', x + w, y + h,
+        'L', x + w, y + h * 0.9
+      ];
+      return path;
+    };
     ref.current = Highcharts.mapChart('map_container', {
       caption: {
         align: 'left',
@@ -73,7 +90,7 @@ const ChartMap = forwardRef((props, ref) => {
           color: 'rgba(0, 0.0, 0.0, 0.8)',
           fontSize: '13px'
         },
-        text: '<em>Source:</em> UN Trade and Development (UNCTAD), 2025<br /><em>Note:</em> In the case of two countries (Togo and United Arab Emirates), it was not possible to consistently identify the dominant commodity group due to the presence of large volumes of exports of manufactured products that may partially or totally be re-exports. <a href="https://unctad.org/page/map-disclaimer" target="_blank">Map disclaimer</a>',
+        text: '<em>Source:</em> UN Trade and Development (UNCTAD), 2025<br /><em>Note:</em> <a href="https://unctad.org/page/map-disclaimer" target="_blank">Map disclaimer</a>, https://unctad.org/map-disclaimer',
         useHTML: true,
         verticalAlign: 'bottom',
         x: 0
@@ -88,7 +105,16 @@ const ChartMap = forwardRef((props, ref) => {
         enabled: false
       },
       exporting: {
-        enabled: false
+        buttons: {
+          contextButton: {
+            menuItems: ['viewFullscreen', 'separator', 'downloadPNG', 'downloadPDF', 'separator', 'downloadCSV'],
+            symbol: 'download',
+            symbolFill: '#000',
+            y: 10
+          }
+        },
+        enabled: true,
+        filename: '2025-unctad_commodity_dependency_map'
       },
       legend: {
         align: 'left',
@@ -174,6 +200,9 @@ const ChartMap = forwardRef((props, ref) => {
                 fontSize: '26px',
                 lineHeight: '30px'
               }
+            },
+            exporting: {
+              enabled: false
             }
           },
           condition: {
@@ -186,10 +215,6 @@ const ChartMap = forwardRef((props, ref) => {
           data: economiescolor.map(region => {
             const match = data.find(row => row.code === region.properties.code);
             const value = match ? parseFloat(match[type]) : null;
-            const agriculture = match ? parseFloat(match.agriculture) : null;
-            const energy = match ? parseFloat(match.energy) : null;
-            const mining = match ? parseFloat(match.mining) : null;
-            const dependency = match ? match.dependency : null;
             const { code } = region.properties; // Store region code
             let labelen = code;
             if (['158', '344', '446'].includes(code)) {
@@ -198,13 +223,14 @@ const ChartMap = forwardRef((props, ref) => {
               labelen = labelMap[code].labelen;
             }
             return {
-              agriculture,
+              all: match ? parseFloat(match.all) : null,
+              agriculture: match ? parseFloat(match.agriculture) : null,
               borderWidth: 0,
-              color: getColor(value, code, data, type, dependency),
-              energy,
+              color: getColor(value, code, data, type, match ? match.dependency : null),
+              energy: match ? parseFloat(match.energy) : null,
               geometry: region.geometry,
               id: code,
-              mining,
+              mining: match ? parseFloat(match.mining) : null,
               name: labelen,
               value
             };

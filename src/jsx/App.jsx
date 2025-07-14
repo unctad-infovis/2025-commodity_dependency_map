@@ -3,6 +3,7 @@ import '../styles/styles.less';
 
 // Load helpers.
 import ChartMap from './modules/ChartMap.jsx';
+import Dropdown from './modules/Dropdown.jsx';
 
 function App() {
   const [curValue, setCurValue] = useState('all');
@@ -41,33 +42,32 @@ function App() {
 
   return (
     <div className="app" ref={appRef}>
-      <div className="right-content">
-        <div className="title_container">
-          <img src="https://static.dwcdn.net/custom/themes/unctad-2024-rebrand/Blue%20arrow.svg" className="logo" alt="UN Trade and Development logo" />
-          <div className="title">
-            <h3>World commodity export dependence</h3>
-            <h4>
-              <span>All commodities, per country, percentage</span>
-              , 2021–2023
-            </h4>
-          </div>
+      {data !== false && <Dropdown values={data[1]} />}
+      <div className="title_container">
+        <img src="https://static.dwcdn.net/custom/themes/unctad-2024-rebrand/Blue%20arrow.svg" className="logo" alt="UN Trade and Development logo" />
+        <div className="title">
+          <h3>World commodity export dependence</h3>
+          <h4>
+            <span>All commodities, per country, percentage</span>
+            , 2021–2023
+          </h4>
         </div>
-        <div className="controls_container">
-          <button type="button" className="selected" onClick={(event) => changeData(event.currentTarget, 'all')} data-arial-label="Select all commodities" data-commodity-label="All commodities, per country, percentage">
-            All commodities
-          </button>
-          <button type="button" onClick={(event) => changeData(event.currentTarget, 'agriculture')} data-arial-label="Select agriculture" data-commodity-label="Agriculture exports, per country">
-            Agriculture
-          </button>
-          <button type="button" onClick={(event) => changeData(event.currentTarget, 'energy')} data-arial-label="Select energy" data-commodity-label="Energy exports, per country">
-            Energy
-          </button>
-          <button type="button" onClick={(event) => changeData(event.currentTarget, 'mining')} data-arial-label="Select mining" data-commodity-label="Minerals, ores and metals export, per country">
-            Mining
-          </button>
-        </div>
-        {data !== false && <ChartMap values={data} ref={mapRef} type={curValue} />}
       </div>
+      <div className="controls_container">
+        <button type="button" className="selected" onClick={(event) => changeData(event.currentTarget, 'all')} data-arial-label="Select all commodities" data-commodity-label="All commodities, per country, percentage">
+          All commodities
+        </button>
+        <button type="button" onClick={(event) => changeData(event.currentTarget, 'agriculture')} data-arial-label="Select agriculture" data-commodity-label="Agriculture exports, per country">
+          Agriculture
+        </button>
+        <button type="button" onClick={(event) => changeData(event.currentTarget, 'energy')} data-arial-label="Select energy" data-commodity-label="Energy exports, per country">
+          Energy
+        </button>
+        <button type="button" onClick={(event) => changeData(event.currentTarget, 'mining')} data-arial-label="Select mining" data-commodity-label="Minerals, ores and metals export, per country">
+          Mining
+        </button>
+      </div>
+      {data !== false && <ChartMap values={data} ref={mapRef} type={curValue} />}
     </div>
   );
 }

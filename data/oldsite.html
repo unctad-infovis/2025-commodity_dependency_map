@@ -1,0 +1,122 @@
+<link rel="stylesheet" type="text/css" href="/themes/custom/newyork_b5/maps/select2.min.css"><style type="text/css">ul.dropdown-menu > li.selected span.text {color:white}
+.selectwidthauto {width:auto !important;}
+.chart-outer {
+    max-width: 800px;
+    margin: 2em auto;
+}
+#container {    
+    height: 300px;
+    margin-top: 2em;
+    min-width: 380px;
+}
+#tblcountry table {
+    border-spacing: 0;
+    background: white;
+    min-width: 100%;
+    margin-top: 10px;
+    font-family: sans-serif;
+    font-size: 0.9em;
+}
+#tblcountry td, th {
+    border: 1px solid silver;
+    padding: 0.5em;
+}
+#tblcountry tr:nth-child(even), #tblcountry thead tr {
+    background: #f8f8f8;
+}
+#tblcountry tr:hover {
+    background: #eff;
+}
+#tblcountry tr td:nth-child(n+2) {
+    text-align: right;
+}
+</style>
+<div class="row">
+    <div class="col-md-12">
+        <p>
+            A country is considered to be commodity export dependent when more than 60 per cent of its total merchandise exports are composed of commodities.
+        </p>
+        <p>
+            Individual statistical profiles for the 195 member States of UNCTAD, comprising over 30 indicators on each economy’s import and export commodity dependence, as well as key structural and socioeconomic variables can be downloaded using the drop-down menu.
+        </p>
+        <p>
+            The State of Commodity dependence report is available <a href="/publications-search?f[0]=product%3A646">here</a>.
+        </p>
+    </div>
+</div>
+<!--
+<div class="row">
+    
+        
+    <div class="col-md-4">
+                     <label style="min-width:100px">Countries: </label>   
+                  
+            
+    </div>
+</div>
+  -->
+<div class="row">
+    <div class="col-md-4" style="padding-bottom:20px;padding-top:20px;">
+        <select class="selectwidthauto" data-live-search="true" data-live-search-normalize="true" data-size="20" id="listOfCountries" title="Choose a country"></select>
+    </div>
+    <div class="col-md-4" style="padding-bottom:20px;padding-top:20px;">
+        <button class="btn btn-primary" style="background-color:#009edb;display:none;width:200px;" id="openCountryProfile" type="button">Open Country Profile</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-3 text-center">
+        <button class="btn btn-primary btnbox" style="width:200px;" id="primary" type="button">All commodities</button>
+    </div>
+    <div class="col-md-3 text-center">
+        <button class="btn btn-primary btnbox" style="background-color:#83B24F;width:200px;" id="agriculture" type="button">Agriculture</button>
+    </div>
+    <div class="col-md-3 text-center">
+        <button class="btn btn-primary btnbox" style="background-color:#00748F;width:200px;" id="energy" type="button">Energy</button>
+    </div>
+    <div class="col-md-3 text-center">
+        <button class="btn btn-primary btnbox" style="background-color:#EA273F;width:200px;" id="minerals" type="button">Mining</button>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-12">
+        <div style="min-height:600px;" id="mapContainer">
+            &nbsp;
+        </div>
+        <div style="font-size:10px;" id="disclaimer2">
+            In the case of two countries (Togo and United Arab Emirates), it was not possible to consistently identify the dominant commodity group due to the presence of large volumes of exports of manufactured products that may partially or totally be re-exports.
+        </div>
+        <div style="font-size:10px;" id="disclaimer">
+            The designations employed and the presentation of material on this map do not imply the expression of any opinion whatsoever on the part of the Secretariat of the United Nations and/or on the part of the countries mentioned on it, concerning the legal status of any country, territory, city or area or of its authorities, or concerning the delimitation of its frontiers or boundaries. (ST/AI/189/Add.25/Rev.1) The information shown is this map is for information purposes only and should be not be considered as any form of endorsement by the United Nations and does not create any legal rights or obligations for any Member State or any of the organs thereof.<br>
+            Dotted line represents approximately the Line of Control in Jammu and Kashmir agreed upon by India and Pakistan. The final status of Jammu and Kashmir has not yet been agreed upon by the parties.<br>
+            &nbsp;
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-8 col-md-push-2">
+        <div style="display:none;" id="tbldiv">
+            <table class="table" id="tblcountry">
+                <thead>
+                    <tr>
+                        <th>
+                            Country
+                        </th>
+                        <th>
+                            All Commodities
+                        </th>
+                        <th>
+                            Agriculture
+                        </th>
+                        <th>
+                            Energy
+                        </th>
+                        <th>
+                            Mining
+                        </th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+</div>
+<script defer="" src="/themes/custom/newyork_b5/maps/select2.min.js"> </script><script defer="" src="/themes/custom/newyork/maps/highmaps.js"></script><script defer="" src="/themes/custom/newyork/maps/exporting.js"></script><script defer="" src="/themes/custom/newyork/maps/WorldUnctad.js"></script><script defer="" src="/sites/default/files/data-file/SCD_Data.js?2023a4"></script><script defer="" src="/sites/default/files/data-file/SCD_Code.js?202231"></script>
