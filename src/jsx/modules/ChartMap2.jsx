@@ -14,8 +14,8 @@ import 'highcharts/modules/pattern-fill';
 import processTopoObjectPolygons from '../helpers/ProcessTopoObjectPolygons.js';
 import processTopoObject from '../helpers/ProcessTopoObject.js';
 import createMaplineSeries from '../helpers/CreateMaplineSeries.js';
-import getColor from '../helpers/GetColor.js';
-import getColorAxis from '../helpers/GetColorAxis.js';
+import getColor from '../helpers/GetColor2.js';
+import getColorAxis from '../helpers/GetColorAxis2.js';
 
 // https://www.npmjs.com/package/uuid4
 // import { v4 as uuidv4 } from 'uuid';
@@ -82,7 +82,7 @@ const ChartMap = forwardRef((props, ref) => {
       ];
       return path;
     };
-    ref.current = Highcharts.mapChart('map_container', {
+    ref.current = Highcharts.mapChart('map_container_2', {
       caption: {
         align: 'left',
         margin: 15,
@@ -97,10 +97,10 @@ const ChartMap = forwardRef((props, ref) => {
       },
       chart: {
         backgroundColor: '#f4f9fd',
-        height: Math.max((document.getElementById('map_container').offsetWidth * 9) / 16, 400),
+        height: Math.max((document.getElementById('map_container_2').offsetWidth * 9) / 16, 400),
         type: 'map'
       },
-      colorAxis: getColorAxis(type),
+      colorAxis: getColorAxis(),
       credits: {
         enabled: false
       },
@@ -215,6 +215,7 @@ const ChartMap = forwardRef((props, ref) => {
           data: economiescolor.map(region => {
             const match = data.find(row => row.code === region.properties.code);
             const value = match ? parseFloat(match[type]) : null;
+            const dep_code = match ? parseFloat(match.dep_code) : null;
             const { code } = region.properties; // Store region code
             let labelen = code;
             if (['158', '344', '446'].includes(code)) {
@@ -226,7 +227,7 @@ const ChartMap = forwardRef((props, ref) => {
               all: match ? parseFloat(match.all) : null,
               agriculture: match ? parseFloat(match.agriculture) : null,
               borderWidth: 0,
-              color: getColor(value, code, data, type, match ? match.dependency : null),
+              color: getColor(dep_code, code, data, type, match ? match.dependency : null),
               energy: match ? parseFloat(match.energy) : null,
               geometry: region.geometry,
               id: code,
@@ -293,7 +294,7 @@ const ChartMap = forwardRef((props, ref) => {
   }, [createMap, props]);
 
   return (
-    <div id="map_container" />
+    <div id="map_container_2" />
   );
 });
 
