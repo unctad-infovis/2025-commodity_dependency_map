@@ -136,7 +136,8 @@ const ChartMap = forwardRef((props, ref) => {
         buttonOptions: {
           verticalAlign: 'bottom'
         },
-        enabled: true
+        enableButtons: true,
+        enabled: false
       },
       plotOptions: {
         mapline: {
