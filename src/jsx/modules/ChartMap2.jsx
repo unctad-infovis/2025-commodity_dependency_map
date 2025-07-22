@@ -289,13 +289,28 @@ const ChartMap = forwardRef((props, ref) => {
     };
   }, [ref]);
 
+  const isFirefox = typeof navigator !== 'undefined' && /firefox/i.test(navigator.userAgent);
+
   useEffect(() => {
     const [topology, data] = props.values;
-    createMap(data, props.type, topology);
-  }, [createMap, props]);
+    if (!isFirefox) {
+      createMap(data, props.type, topology);
+    }
+  }, [createMap, props, isFirefox]);
 
   return (
-    <div id="map_container_2" />
+    <div>
+      {isFirefox ? (
+        <div style={{
+          padding: '1rem', backgroundColor: '#F7DFDF', color: '#000', fontWeight: 'normal'
+        }}
+        >
+          ⚠️ Unfortunately, this map does not display correctly in Firefox. Please use Chrome, Edge, or Safari.
+        </div>
+      ) : (
+        <div id="map_container_2" />
+      )}
+    </div>
   );
 });
 

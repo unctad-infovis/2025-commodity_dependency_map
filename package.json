@@ -43,7 +43,7 @@
     "webpack-dev-server": "^5.2.2"
   },
   "dependencies": {
-    "highcharts": "^12.2.0",
+    "highcharts": "^12.3.0",
     "react-select": "^5.10.1",
     "uuid": "^11.1.0"
   }

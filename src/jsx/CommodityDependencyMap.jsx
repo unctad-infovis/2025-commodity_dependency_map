@@ -10,7 +10,6 @@ function App() {
   const [data, setData] = useState(false);
 
   const appRef = useRef(null);
-  const mapRef = useRef();
 
   const fetchExternalData = () => {
     const dataPath = `${(window.location.href.includes('unctad.org')) ? 'https://storage.unctad.org/2025-commodity_dependency_map/' : (window.location.href.includes('localhost:80')) ? './' : 'https://unctad-infovis.github.io/2025-commodity_dependency_map/'}assets/data/`;
@@ -67,7 +66,7 @@ function App() {
           Mining
         </button>
       </div>
-      {data !== false && <ChartMap values={data} ref={mapRef} type={curValue} />}
+      {data !== false && <ChartMap values={data} type_data={curValue} />}
     </div>
   );
 }

@@ -1,5 +1,5 @@
 import React, {
-  forwardRef, useEffect, useCallback/* , useRef */
+  useEffect, useCallback, useRef
 } from 'react';
 import PropTypes from 'prop-types';
 
@@ -20,7 +20,9 @@ import getColorAxis from '../helpers/GetColorAxis.js';
 // https://www.npmjs.com/package/uuid4
 // import { v4 as uuidv4 } from 'uuid';
 
-const ChartMap = forwardRef((props, ref) => {
+function ChartMap({ values, type_data }) {
+  const isFirefox = typeof navigator !== 'undefined' && /firefox/i.test(navigator.userAgent);
+  const ref = useRef(null);
   const createMap = useCallback((data, type, topology) => {
     const plainborders = processTopoObject(topology, 'plain-borders');
     const dashedborders = processTopoObject(topology, 'dashed-borders');
@@ -139,6 +141,9 @@ const ChartMap = forwardRef((props, ref) => {
         enableButtons: true,
         enabled: false
       },
+      mapView: {
+        fitToBounds: true
+      },
       plotOptions: {
         mapline: {
           lineWidth: 0.33,
@@ -213,6 +218,7 @@ const ChartMap = forwardRef((props, ref) => {
       },
       series: [
         {
+          affectsMapView: true,
           data: economiescolor.map(region => {
             const match = data.find(row => row.code === region.properties.code);
             const value = match ? parseFloat(match[type]) : null;
@@ -244,14 +250,15 @@ const ChartMap = forwardRef((props, ref) => {
               borderWidth: 3
             }
           },
+          type: 'map',
           visible: true,
-          type: 'map'
         },
         {
+          affectsMapView: false,
+          clip: false,
           data: economies.map(region => ({
             borderWidth: 0,
             geometry: region.geometry
-
           })),
           enableMouseTracking: false,
           name: 'Economies',
@@ -289,14 +296,27 @@ const ChartMap = forwardRef((props, ref) => {
   }, [ref]);
 
   useEffect(() => {
-    const [topology, data] = props.values;
-    createMap(data, props.type, topology);
-  }, [createMap, props]);
+    const [topology, data] = values;
+    if (!isFirefox) {
+      createMap(data, type_data, topology);
+    }
+  }, [createMap, type_data, values, isFirefox]);
 
   return (
-    <div id="map_container" />
+    <div>
+      {isFirefox ? (
+        <div style={{
+          padding: '1rem', backgroundColor: '#F7DFDF', color: '#000', fontWeight: 'normal'
+        }}
+        >
+          ⚠️ Unfortunately, this map does not display correctly in Firefox. Please use Chrome, Edge, or Safari.
+        </div>
+      ) : (
+        <div id="map_container" ref={ref} />
+      )}
+    </div>
   );
-});
+}
 
 export default ChartMap;
 
@@ -305,5 +325,5 @@ ChartMap.propTypes = {
     PropTypes.object,
     PropTypes.array
   ])).isRequired,
-  type: PropTypes.string.isRequired
+  type_data: PropTypes.string.isRequired
 };

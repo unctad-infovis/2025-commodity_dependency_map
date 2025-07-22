@@ -1,5 +1,6 @@
 // Function to create mapline series
 const createMaplineSeries = (name, mapData, dashStyle) => ({
+  affectsMapView: false,
   dashStyle,
   mapData: mapData.map(border => ({
     color: 'rgba(255, 255, 255, 0.6)',
