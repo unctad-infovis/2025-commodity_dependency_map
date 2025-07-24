@@ -22,9 +22,14 @@ const processTopoObject = (topologyObject, objectName) => {
       }
 
       // Apply the transformation to convert from projected to lat/lon
+      // return [
+      //   currentPoint[0] * transform.scale[0] + transform.translate[0],
+      //   currentPoint[1] * transform.scale[1] + transform.translate[1]
+      // ];
+      const coordinateScaleFactor = 1 / 100000;
       return [
-        currentPoint[0] * transform.scale[0] + transform.translate[0],
-        currentPoint[1] * transform.scale[1] + transform.translate[1]
+        (currentPoint[0] * transform.scale[0] + transform.translate[0]) * coordinateScaleFactor,
+        (currentPoint[1] * transform.scale[1] + transform.translate[1]) * coordinateScaleFactor
       ];
     });
 

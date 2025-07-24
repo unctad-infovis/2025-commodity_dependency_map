@@ -21,7 +21,6 @@ import getColorAxis from '../helpers/GetColorAxis.js';
 // import { v4 as uuidv4 } from 'uuid';
 
 function ChartMap({ values, type_data }) {
-  const isFirefox = typeof navigator !== 'undefined' && /firefox/i.test(navigator.userAgent);
   const ref = useRef(null);
   const createMap = useCallback((data, type, topology) => {
     const plainborders = processTopoObject(topology, 'plain-borders');
@@ -30,6 +29,7 @@ function ChartMap({ values, type_data }) {
     const dashdottedborders = processTopoObject(topology, 'dash-dotted-borders');
 
     const economiescolor = processTopoObjectPolygons(topology, 'economies-color');
+    // const economiescolor = Highcharts.geojson(topology.objects['economies-color'], 1);
     const economies = processTopoObjectPolygons(topology, 'economies');
 
     // Prepare a mapping of code -> labelen, labelfr from topology
@@ -142,7 +142,6 @@ function ChartMap({ values, type_data }) {
         enabled: false
       },
       mapView: {
-        fitToBounds: true
       },
       plotOptions: {
         mapline: {
@@ -218,7 +217,6 @@ function ChartMap({ values, type_data }) {
       },
       series: [
         {
-          affectsMapView: true,
           data: economiescolor.map(region => {
             const match = data.find(row => row.code === region.properties.code);
             const value = match ? parseFloat(match[type]) : null;
@@ -247,7 +245,7 @@ function ChartMap({ values, type_data }) {
           states: {
             hover: {
               borderColor: '#fff',
-              borderWidth: 3
+              borderWidth: 2
             }
           },
           type: 'map',
@@ -255,7 +253,6 @@ function ChartMap({ values, type_data }) {
         },
         {
           affectsMapView: false,
-          clip: false,
           data: economies.map(region => ({
             borderWidth: 0,
             geometry: region.geometry
@@ -297,23 +294,12 @@ function ChartMap({ values, type_data }) {
 
   useEffect(() => {
     const [topology, data] = values;
-    if (!isFirefox) {
-      createMap(data, type_data, topology);
-    }
-  }, [createMap, type_data, values, isFirefox]);
+    createMap(data, type_data, topology);
+  }, [createMap, type_data, values]);
 
   return (
     <div>
-      {isFirefox ? (
-        <div style={{
-          padding: '1rem', backgroundColor: '#F7DFDF', color: '#000', fontWeight: 'normal'
-        }}
-        >
-          ⚠️ Unfortunately, this map does not display correctly in Firefox. Please use Chrome, Edge, or Safari.
-        </div>
-      ) : (
-        <div id="map_container" ref={ref} />
-      )}
+      <div id="map_container" ref={ref} />
     </div>
   );
 }

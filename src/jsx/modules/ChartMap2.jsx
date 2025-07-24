@@ -242,13 +242,14 @@ const ChartMap = forwardRef((props, ref) => {
           states: {
             hover: {
               borderColor: '#fff',
-              borderWidth: 3
+              borderWidth: 2
             }
           },
           visible: true,
           type: 'map'
         },
         {
+          affectsMapView: false,
           data: economies.map(region => ({
             borderWidth: 0,
             geometry: region.geometry
@@ -289,27 +290,14 @@ const ChartMap = forwardRef((props, ref) => {
     };
   }, [ref]);
 
-  const isFirefox = typeof navigator !== 'undefined' && /firefox/i.test(navigator.userAgent);
-
   useEffect(() => {
     const [topology, data] = props.values;
-    if (!isFirefox) {
-      createMap(data, props.type, topology);
-    }
-  }, [createMap, props, isFirefox]);
+    createMap(data, props.type, topology);
+  }, [createMap, props]);
 
   return (
     <div>
-      {isFirefox ? (
-        <div style={{
-          padding: '1rem', backgroundColor: '#F7DFDF', color: '#000', fontWeight: 'normal'
-        }}
-        >
-          ⚠️ Unfortunately, this map does not display correctly in Firefox. Please use Chrome, Edge, or Safari.
-        </div>
-      ) : (
-        <div id="map_container_2" />
-      )}
+      <div id="map_container_2" />
     </div>
   );
 });
